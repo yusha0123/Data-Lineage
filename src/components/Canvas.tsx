@@ -31,7 +31,7 @@ const Canvas: React.FC<CanvasProps> = ({
   }, [initialNodes, initialEdges, setNodes, setEdges]);
 
   return (
-    <div style={{ width: "100%", height: "calc(100vh - 60px)" }}>
+    <div style={{ width: "100%", height: "calc(100vh - 55px)" }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
