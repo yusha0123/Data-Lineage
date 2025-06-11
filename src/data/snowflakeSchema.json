@@ -1,0 +1,139 @@
+{
+  "data": {
+    "models": [
+      {
+        "dimensions": [
+          {
+            "dimension_table_id": 5081,
+            "dimension_id": 935,
+            "dimension_name": "DimDate",
+            "dimension_created_datetime_timestamp": "2025-06-11T07:11:49.526077+00:00"
+          },
+          {
+            "dimension_table_id": 5082,
+            "dimension_id": 936,
+            "dimension_name": "DimProduct",
+            "dimension_created_datetime_timestamp": "2025-06-11T07:11:49.526077+00:00"
+          },
+          {
+            "dimension_table_id": 5083,
+            "dimension_id": 937,
+            "dimension_name": "DimLocation",
+            "dimension_created_datetime_timestamp": "2025-06-11T07:11:49.526077+00:00"
+          },
+          {
+            "dimension_table_id": 5084,
+            "dimension_id": 938,
+            "dimension_name": "DimCategory",
+            "dimension_created_datetime_timestamp": "2025-06-11T07:11:49.526077+00:00"
+          },
+          {
+            "dimension_table_id": 5085,
+            "dimension_id": 939,
+            "dimension_name": "DimRegion",
+            "dimension_created_datetime_timestamp": "2025-06-11T07:11:49.526077+00:00"
+          }
+        ],
+        "facts": [
+          {
+            "fact_definition_id": 2055,
+            "fact_table_id": 5085,
+            "fact_id": 475,
+            "fact_name": "FactSales",
+            "fact_created_datetime_timestamp": "2025-06-11T07:11:49.526077+00:00"
+          },
+          {
+            "fact_definition_id": 2056,
+            "fact_table_id": 5086,
+            "fact_id": 476,
+            "fact_name": "FactInventory",
+            "fact_created_datetime_timestamp": "2025-06-11T07:11:49.526077+00:00"
+          }
+        ]
+      }
+    ]
+  },
+  "schemaInfo": {
+    "dimensions": [
+      {
+        "name": "DimDate",
+        "fields": [
+          { "name": "date_id", "type": "int", "isPrimaryKey": true },
+          { "name": "day", "type": "string" },
+          { "name": "month", "type": "string" },
+          { "name": "year", "type": "string" }
+        ]
+      },
+      {
+        "name": "DimProduct",
+        "fields": [
+          { "name": "product_id", "type": "int", "isPrimaryKey": true },
+          { "name": "product_name", "type": "string" },
+          { "name": "category_id", "type": "int", "isForeignKey": true, "references": "DimCategory" },
+          { "name": "price", "type": "float" }
+        ]
+      },
+      {
+        "name": "DimLocation",
+        "fields": [
+          { "name": "location_id", "type": "int", "isPrimaryKey": true },
+          { "name": "location_name", "type": "string" },
+          { "name": "region_id", "type": "int", "isForeignKey": true, "references": "DimRegion" }
+        ]
+      },
+      {
+        "name": "DimCategory",
+        "fields": [
+          { "name": "category_id", "type": "int", "isPrimaryKey": true },
+          { "name": "category_name", "type": "string" },
+          { "name": "category_description", "type": "string" }
+        ]
+      },
+      {
+        "name": "DimRegion",
+        "fields": [
+          { "name": "region_id", "type": "int", "isPrimaryKey": true },
+          { "name": "region_name", "type": "string" },
+          { "name": "country", "type": "string" }
+        ]
+      }
+    ],
+    "facts": [
+      {
+        "name": "FactSales",
+        "fields": [
+          { "name": "sale_id", "type": "int", "isPrimaryKey": true },
+          { "name": "date_id", "type": "int", "isForeignKey": true, "references": "DimDate" },
+          { "name": "product_id", "type": "int", "isForeignKey": true, "references": "DimProduct" },
+          { "name": "location_id", "type": "int", "isForeignKey": true, "references": "DimLocation" },
+          { "name": "quantity", "type": "int" },
+          { "name": "total_amount", "type": "float" }
+        ]
+      },
+      {
+        "name": "FactInventory",
+        "fields": [
+          { "name": "inventory_id", "type": "int", "isPrimaryKey": true },
+          { "name": "date_id", "type": "int", "isForeignKey": true, "references": "DimDate" },
+          { "name": "product_id", "type": "int", "isForeignKey": true, "references": "DimProduct" },
+          { "name": "location_id", "type": "int", "isForeignKey": true, "references": "DimLocation" },
+          { "name": "stock_level", "type": "int" }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "sourceTable": "DimProduct",
+        "targetTable": "DimCategory",
+        "sourceField": "category_id",
+        "targetField": "category_id"
+      },
+      {
+        "sourceTable": "DimLocation",
+        "targetTable": "DimRegion",
+        "sourceField": "region_id",
+        "targetField": "region_id"
+      }
+    ]
+  }
+} 

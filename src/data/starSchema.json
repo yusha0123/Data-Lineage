@@ -56,7 +56,6 @@
         "fields": [
           { "name": "product_id", "type": "int", "isPrimaryKey": true },
           { "name": "product_name", "type": "string" },
-          { "name": "category", "type": "string" },
           { "name": "brand", "type": "string" },
           { "name": "price", "type": "float" }
         ]
@@ -92,7 +91,8 @@
           { "name": "store_id", "type": "int", "isForeignKey": true, "references": "DimStore" }
         ]
       }
-    ]
+    ],
+    "relationships": []
   }
 }
   
