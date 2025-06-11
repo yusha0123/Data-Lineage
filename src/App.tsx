@@ -5,30 +5,20 @@ import {
   useEdgesState,
   useNodesState,
 } from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
+
+import { generateStarSchemaLayout } from "./utils/layout";
+import schemaData from "./data/starSchema.json";
+import type { StarSchemaData } from "./types/index";
 import { nodeTypes } from "./components/NodeTypes";
-import { layoutNodesAndEdges } from "./utils";
-import { rawNodes } from "./constants";
+
+const { nodes: initialNodes, edges: initialEdges } = generateStarSchemaLayout(
+  schemaData as StarSchemaData
+);
 
 export default function App() {
-  const inputData = {
-    sources: rawNodes
-      .filter((node) => node.type === "startNode")
-      .map((node) => node.data),
-    pipelines: rawNodes
-      .filter((node) => node.type === "pipelineNode")
-      .map((node) => node.data),
-    destinations: rawNodes
-      .filter((node) => node.type === "destinationNode")
-      .map((node) => node.data),
-    finalTable: rawNodes.find((node) => node.type === "endNode")!
-      .data as EndNodeData,
-  };
-
-  const { nodes: layoutedNodes, edges: layoutedEdges } =
-    layoutNodesAndEdges(inputData);
-
-  const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);
+  const [nodes, , onNodesChange] = useNodesState(initialNodes);
+  const [edges, , onEdgesChange] = useEdgesState(initialEdges);
 
   return (
     <div style={{ width: "100%", height: "100vh" }}>
@@ -36,12 +26,14 @@ export default function App() {
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
-        fitView
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        fitView
+        nodesDraggable={true}
+        nodesConnectable={false}
       >
+        <Controls showInteractive={false} />
         <Background />
-        <Controls />
       </ReactFlow>
     </div>
   );

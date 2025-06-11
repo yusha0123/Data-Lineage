@@ -1,0 +1,44 @@
+{
+  "data": {
+    "models": [
+      {
+        "dimensions": [
+          {
+            "dimension_table_id": 5081,
+            "dimension_id": 935,
+            "dimension_name": "DimDate",
+            "dimension_created_datetime_timestamp": "2025-06-11T07:11:49.526077+00:00"
+          },
+          {
+            "dimension_table_id": 5082,
+            "dimension_id": 936,
+            "dimension_name": "DimProduct",
+            "dimension_created_datetime_timestamp": "2025-06-11T07:11:49.526077+00:00"
+          },
+          {
+            "dimension_table_id": 5083,
+            "dimension_id": 937,
+            "dimension_name": "DimCustomer",
+            "dimension_created_datetime_timestamp": "2025-06-11T07:11:49.526077+00:00"
+          },
+          {
+            "dimension_table_id": 5084,
+            "dimension_id": 938,
+            "dimension_name": "DimStore",
+            "dimension_created_datetime_timestamp": "2025-06-11T07:11:49.526077+00:00"
+          }
+        ],
+        "facts": [
+          {
+            "fact_definition_id": 2055,
+            "fact_table_id": 5085,
+            "fact_id": 475,
+            "fact_name": "FactSales",
+            "fact_created_datetime_timestamp": "2025-06-11T07:11:49.526077+00:00"
+          }
+        ]
+      }
+    ]
+  }
+}
+  
