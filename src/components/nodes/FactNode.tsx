@@ -27,9 +27,6 @@ const FactNode = ({ data }: FactNodeProps) => {
           ))}
       </div>
       <Handle type="target" position={Position.Top} isConnectable={false} />
-      <Handle type="target" position={Position.Bottom} isConnectable={false} />
-      <Handle type="target" position={Position.Left} isConnectable={false} />
-      <Handle type="target" position={Position.Right} isConnectable={false} />
     </div>
   );
 };
