@@ -39,6 +39,60 @@
         ]
       }
     ]
+  },
+  "schemaInfo": {
+    "dimensions": [
+      {
+        "name": "DimDate",
+        "fields": [
+          { "name": "date_id", "type": "int", "isPrimaryKey": true },
+          { "name": "day", "type": "string" },
+          { "name": "month", "type": "string" },
+          { "name": "year", "type": "string" }
+        ]
+      },
+      {
+        "name": "DimProduct",
+        "fields": [
+          { "name": "product_id", "type": "int", "isPrimaryKey": true },
+          { "name": "product_name", "type": "string" },
+          { "name": "category", "type": "string" },
+          { "name": "brand", "type": "string" },
+          { "name": "price", "type": "float" }
+        ]
+      },
+      {
+        "name": "DimCustomer",
+        "fields": [
+          { "name": "customer_id", "type": "int", "isPrimaryKey": true },
+          { "name": "name", "type": "string" },
+          { "name": "gender", "type": "string" },
+          { "name": "age", "type": "int" },
+          { "name": "membership", "type": "string" }
+        ]
+      },
+      {
+        "name": "DimStore",
+        "fields": [
+          { "name": "store_id", "type": "int", "isPrimaryKey": true },
+          { "name": "store_name", "type": "string" },
+          { "name": "location", "type": "string" },
+          { "name": "region", "type": "string" }
+        ]
+      }
+    ],
+    "facts": [
+      {
+        "name": "FactSales",
+        "fields": [
+          { "name": "sale_id", "type": "int" },
+          { "name": "date_id", "type": "int", "isForeignKey": true, "references": "DimDate" },
+          { "name": "product_id", "type": "int", "isForeignKey": true, "references": "DimProduct" },
+          { "name": "customer_id", "type": "int", "isForeignKey": true, "references": "DimCustomer" },
+          { "name": "store_id", "type": "int", "isForeignKey": true, "references": "DimStore" }
+        ]
+      }
+    ]
   }
 }
   

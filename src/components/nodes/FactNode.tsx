@@ -1,6 +1,8 @@
 import { Handle, Position } from "@xyflow/react";
 import type { FactNodeProps } from "../../types/index";
 
+
+
 const FactNode = ({ data }: FactNodeProps) => {
   return (
     <div className="bg-[#ffb3ba] border-1 border-[#ff8f9a] rounded-md p-3 w-72 text-sm">

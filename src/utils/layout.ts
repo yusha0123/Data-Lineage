@@ -1,5 +1,5 @@
 import { Position, type Edge, type Node } from '@xyflow/react';
-import type { StarSchemaData, SchemaInfo } from '../types/index';
+import type { StarSchemaData, SchemaInfo, Field } from '../types/index';
 
 const RADIUS = 350;
 const CENTER_X = 400;
@@ -18,68 +18,14 @@ const getHandlePosition = (angle: number): Position => {
     return Position.Bottom; // Top
 };
 
-// Schema data from user requirements
-const schemaInfo: SchemaInfo = {
-    dimensions: [
-        {
-            name: "DimDate",
-            fields: [
-                { name: "date_id", type: "int", isPrimaryKey: true },
-                { name: "day", type: "string" },
-                { name: "month", type: "string" },
-                { name: "year", type: "string" }
-            ]
-        },
-        {
-            name: "DimProduct",
-            fields: [
-                { name: "product_id", type: "int", isPrimaryKey: true },
-                { name: "product_name", type: "string" },
-                { name: "category", type: "string" },
-                { name: "brand", type: "string" },
-                { name: "price", type: "float" }
-            ]
-        },
-        {
-            name: "DimCustomer",
-            fields: [
-                { name: "customer_id", type: "int", isPrimaryKey: true },
-                { name: "name", type: "string" },
-                { name: "gender", type: "string" },
-                { name: "age", type: "int" },
-                { name: "membership", type: "string" }
-            ]
-        },
-        {
-            name: "DimStore",
-            fields: [
-                { name: "store_id", type: "int", isPrimaryKey: true },
-                { name: "store_name", type: "string" },
-                { name: "location", type: "string" },
-                { name: "region", type: "string" }
-            ]
-        }
-    ],
-    facts: [
-        {
-            name: "FactSales",
-            fields: [
-                { name: "sale_id", type: "int" },
-                { name: "date_id", type: "int", isForeignKey: true, references: "DimDate" },
-                { name: "product_id", type: "int", isForeignKey: true, references: "DimProduct" },
-                { name: "customer_id", type: "int", isForeignKey: true, references: "DimCustomer" },
-                { name: "store_id", type: "int", isForeignKey: true, references: "DimStore" }
-            ]
-        }
-    ]
-};
-
 export const generateStarSchemaLayout = (schemaData: StarSchemaData): { nodes: Node[], edges: Edge[] } => {
     const nodes: Node[] = [];
     const edges: Edge[] = [];
 
     const model = schemaData.data.models[0];
-    if (!model || !model.facts.length) {
+    const schemaInfo = schemaData.schemaInfo;
+
+    if (!model || !model.facts.length || !schemaInfo) {
         return { nodes, edges };
     }
 
@@ -87,7 +33,7 @@ export const generateStarSchemaLayout = (schemaData: StarSchemaData): { nodes: N
     const dimensions = model.dimensions;
 
     // Get the schema info for the fact table
-    const factSchemaInfo = schemaInfo.facts.find(f => f.name === fact.fact_name);
+    const factSchemaInfo = schemaInfo.facts.find((f: { name: string }) => f.name === fact.fact_name);
 
     // Create fact node
     const factNode: Node = {
@@ -111,7 +57,7 @@ export const generateStarSchemaLayout = (schemaData: StarSchemaData): { nodes: N
         const handlePosition = getHandlePosition(angle);
 
         // Get the schema info for this dimension
-        const dimSchemaInfo = schemaInfo.dimensions.find(d => d.name === dim.dimension_name);
+        const dimSchemaInfo = schemaInfo.dimensions.find((d: { name: string }) => d.name === dim.dimension_name);
 
         const dimensionNode: Node = {
             id: `dim-${dim.dimension_table_id}`,
@@ -127,7 +73,7 @@ export const generateStarSchemaLayout = (schemaData: StarSchemaData): { nodes: N
         nodes.push(dimensionNode);
 
         // Find the relevant foreign key field for the edge label
-        const foreignKeyField = factSchemaInfo?.fields.find(f =>
+        const foreignKeyField = factSchemaInfo?.fields.find((f: Field) =>
             f.isForeignKey && f.references === dim.dimension_name);
 
         const edge: Edge = {

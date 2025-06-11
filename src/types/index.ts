@@ -20,18 +20,30 @@ export interface Model {
     facts: Fact[];
 }
 
-export interface StarSchemaData {
-    data: {
-        models: Model[];
-    };
-}
-
 export interface Field {
     name: string;
     type: string;
     isPrimaryKey?: boolean;
     isForeignKey?: boolean;
     references?: string;
+}
+
+export interface SchemaInfo {
+    dimensions: {
+        name: string;
+        fields: Field[];
+    }[];
+    facts: {
+        name: string;
+        fields: Field[];
+    }[];
+}
+
+export interface StarSchemaData {
+    data: {
+        models: Model[];
+    };
+    schemaInfo: SchemaInfo;
 }
 
 export interface FactNodeProps {
@@ -47,15 +59,4 @@ export interface DimensionNodeProps {
         handlePosition: Position;
         fields?: Field[];
     };
-}
-
-export interface SchemaInfo {
-    dimensions: {
-        name: string;
-        fields: Field[];
-    }[];
-    facts: {
-        name: string;
-        fields: Field[];
-    }[];
 }
