@@ -28,6 +28,13 @@ export interface Field {
     references?: string;
 }
 
+export interface Relationship {
+    sourceTable: string;
+    targetTable: string;
+    sourceField: string;
+    targetField: string;
+}
+
 export interface SchemaInfo {
     dimensions: {
         name: string;
@@ -37,26 +44,28 @@ export interface SchemaInfo {
         name: string;
         fields: Field[];
     }[];
+    relationships?: Relationship[];
 }
 
-export interface StarSchemaData {
+export interface DataSchemaData {
     data: {
         models: Model[];
     };
     schemaInfo: SchemaInfo;
 }
 
-export interface FactNodeProps {
+// Legacy type for backward compatibility
+export interface StarSchemaData extends DataSchemaData { }
+
+export interface TableNodeProps {
     data: {
         label: string;
         fields?: Field[];
+        isFactTable?: boolean;
+        handlePosition?: Position;
     };
 }
 
-export interface DimensionNodeProps {
-    data: {
-        label: string;
-        handlePosition: Position;
-        fields?: Field[];
-    };
-}
+// Legacy types for backward compatibility
+export interface FactNodeProps extends TableNodeProps { }
+export interface DimensionNodeProps extends TableNodeProps { }
