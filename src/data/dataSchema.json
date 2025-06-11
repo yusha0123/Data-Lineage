@@ -41,6 +41,13 @@
             "fact_id": 475,
             "fact_name": "FactSales",
             "fact_created_datetime_timestamp": "2025-06-11T07:11:49.526077+00:00"
+          },
+          {
+            "fact_definition_id": 2056,
+            "fact_table_id": 5086,
+            "fact_id": 476,
+            "fact_name": "FactInventory",
+            "fact_created_datetime_timestamp": "2025-06-11T07:11:49.526077+00:00"
           }
         ]
       }
@@ -74,7 +81,8 @@
           { "name": "name", "type": "string" },
           { "name": "gender", "type": "string" },
           { "name": "age", "type": "int" },
-          { "name": "membership", "type": "string" }
+          { "name": "membership", "type": "string" },
+          { "name": "store_id", "type": "int", "isForeignKey": true, "references": "DimStore" }
         ]
       },
       {
@@ -105,6 +113,15 @@
           { "name": "customer_id", "type": "int", "isForeignKey": true, "references": "DimCustomer" },
           { "name": "store_id", "type": "int", "isForeignKey": true, "references": "DimStore" }
         ]
+      },
+      {
+        "name": "FactInventory",
+        "fields": [
+          { "name": "inventory_id", "type": "int" },
+          { "name": "date_id", "type": "int", "isForeignKey": true, "references": "DimDate" },
+          { "name": "product_id", "type": "int", "isForeignKey": true, "references": "DimProduct" },
+          { "name": "store_id", "type": "int", "isForeignKey": true, "references": "DimStore" }
+        ]
       }
     ],
     "relationships": [
@@ -113,6 +130,12 @@
         "targetTable": "DimProductCategory",
         "sourceField": "category_id",
         "targetField": "category_id"
+      },
+      {
+        "sourceTable": "DimCustomer",
+        "targetTable": "DimStore",
+        "sourceField": "store_id",
+        "targetField": "store_id"
       }
     ]
   }

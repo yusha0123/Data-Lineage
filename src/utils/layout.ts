@@ -38,26 +38,47 @@ export const generateDataSchemaLayout = (schemaData: DataSchemaData): { nodes: N
     // Create table nodes map for easier reference
     const hasFacts = model.facts.length > 0;
     const hasCustomRelationships = schemaInfo.relationships && schemaInfo.relationships.length > 0;
+    const numFacts = model.facts.length;
 
     // Handle facts if they exist
     if (hasFacts) {
-        const fact = model.facts[0];
-        // Get the schema info for the fact table
-        const factSchemaInfo = schemaInfo.facts.find((f: { name: string }) => f.name === fact.fact_name);
+        // Calculate positions for multiple fact tables
+        model.facts.forEach((fact, factIndex) => {
+            // Get the schema info for the fact table
+            const factSchemaInfo = schemaInfo.facts.find((f: { name: string }) => f.name === fact.fact_name);
 
-        // Create fact node
-        const factNode: Node = {
-            id: `table-${fact.fact_name}`,
-            type: 'tableNode',
-            data: {
-                label: fact.fact_name,
-                fields: factSchemaInfo?.fields || [],
-                isFactTable: true
-            },
-            position: { x: CENTER_X, y: CENTER_Y },
-        };
-        nodes.push(factNode);
-        tableNodes[fact.fact_name] = factNode;
+            if (!factSchemaInfo) return;
+
+            // Calculate position based on number of facts
+            let factX, factY;
+
+            if (numFacts === 1) {
+                // Single fact in center
+                factX = CENTER_X;
+                factY = CENTER_Y;
+            } else {
+                // Multiple facts arranged in a small inner circle
+                const innerRadius = RADIUS * 0.3;
+                const factAngle = (factIndex / numFacts) * 2 * Math.PI;
+                factX = CENTER_X + innerRadius * Math.cos(factAngle);
+                factY = CENTER_Y + innerRadius * Math.sin(factAngle);
+            }
+
+            // Create fact node
+            const factNode: Node = {
+                id: `table-${fact.fact_name}`,
+                type: 'tableNode',
+                data: {
+                    label: fact.fact_name,
+                    fields: factSchemaInfo?.fields || [],
+                    isFactTable: true
+                },
+                position: { x: factX, y: factY },
+                draggable: true,
+            };
+            nodes.push(factNode);
+            tableNodes[fact.fact_name] = factNode;
+        });
     }
 
     // Create dimension nodes
@@ -103,32 +124,33 @@ export const generateDataSchemaLayout = (schemaData: DataSchemaData): { nodes: N
         tableNodes[dim.dimension_name] = dimensionNode;
     });
 
-    // Create edges based on relationships
+    // Create edges based on relationships for all fact tables
     if (hasFacts) {
-        // Traditional fact-to-dimension relationships based on foreign keys
-        const fact = model.facts[0];
-        const factSchemaInfo = schemaInfo.facts.find((f: { name: string }) => f.name === fact.fact_name);
+        // Process all fact tables
+        model.facts.forEach(fact => {
+            const factSchemaInfo = schemaInfo.facts.find((f: { name: string }) => f.name === fact.fact_name);
+            const factNode = tableNodes[fact.fact_name];
 
-        if (factSchemaInfo) {
-            factSchemaInfo.fields.forEach(field => {
-                if (field.isForeignKey && field.references) {
-                    const dimensionNode = tableNodes[field.references];
-                    const factNode = tableNodes[fact.fact_name];
+            if (factSchemaInfo && factNode) {
+                factSchemaInfo.fields.forEach(field => {
+                    if (field.isForeignKey && field.references) {
+                        const dimensionNode = tableNodes[field.references];
 
-                    if (dimensionNode && factNode) {
-                        const edge: Edge = {
-                            id: `e-${field.references}-${fact.fact_name}`,
-                            source: dimensionNode.id,
-                            target: factNode.id,
-                            animated: true,
-                            style: { strokeWidth: 2 },
-                            label: field.name || ''
-                        };
-                        edges.push(edge);
+                        if (dimensionNode) {
+                            const edge: Edge = {
+                                id: `e-${field.references}-${fact.fact_name}-${field.name}`,
+                                source: dimensionNode.id,
+                                target: factNode.id,
+                                animated: true,
+                                style: { strokeWidth: 2 },
+                                label: field.name || ''
+                            };
+                            edges.push(edge);
+                        }
                     }
-                }
-            });
-        }
+                });
+            }
+        });
     }
 
     // Add dimension-to-dimension relationships if they exist

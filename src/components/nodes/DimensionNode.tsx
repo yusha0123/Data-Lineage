@@ -1,4 +1,4 @@
-import { Handle } from "@xyflow/react";
+import { Handle, Position } from "@xyflow/react";
 import type { DimensionNodeProps } from "../../types/index";
 
 const DimensionNode = ({ data }: DimensionNodeProps) => {
@@ -21,7 +21,7 @@ const DimensionNode = ({ data }: DimensionNodeProps) => {
             </div>
           ))}
       </div>
-      <Handle type="source" position={data.handlePosition} />
+      <Handle type="source" position={data.handlePosition || Position.Top} />
     </div>
   );
 };
