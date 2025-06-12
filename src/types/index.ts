@@ -65,7 +65,3 @@ export interface TableNodeProps {
         handlePosition?: Position;
     };
 }
-
-// Legacy types for backward compatibility
-export interface FactNodeProps extends TableNodeProps { }
-export interface DimensionNodeProps extends TableNodeProps { }

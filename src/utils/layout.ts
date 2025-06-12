@@ -12,10 +12,10 @@ const getHandlePosition = (angle: number): Position => {
     if (normalizedAngle > PI) normalizedAngle -= 2 * PI;
     if (normalizedAngle < -PI) normalizedAngle += 2 * PI;
 
-    if (normalizedAngle > -PI / 4 && normalizedAngle <= PI / 4) return Position.Left; // Right
-    if (normalizedAngle > PI / 4 && normalizedAngle <= (3 * PI) / 4) return Position.Top; // Bottom
-    if (normalizedAngle > (3 * PI) / 4 || normalizedAngle <= -(3 * PI) / 4) return Position.Right; // Left
-    return Position.Bottom; // Top
+    if (normalizedAngle > -PI / 4 && normalizedAngle <= PI / 4) return Position.Left;
+    if (normalizedAngle > PI / 4 && normalizedAngle <= (3 * PI) / 4) return Position.Top;
+    if (normalizedAngle > (3 * PI) / 4 || normalizedAngle <= -(3 * PI) / 4) return Position.Right;
+    return Position.Bottom;
 };
 
 // Legacy function for backward compatibility
