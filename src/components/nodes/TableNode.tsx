@@ -9,7 +9,8 @@ const TableNode = ({ data }: TableNodeProps) => {
 
   return (
     <div
-      className={`${bgColor} border-1 ${borderColor} rounded-md p-3 w-72 text-sm`}
+      className={`${bgColor} border-1 ${borderColor} rounded-md p-3 w-72 text-sm cursor-pointer transition-shadow hover:shadow-lg`}
+      title="Double-click to edit"
     >
       <div
         className={`font-bold text-center border-b ${borderColor} mb-2 pb-1`}

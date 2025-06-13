@@ -6,9 +6,23 @@ import type { DataSchemaData } from "./types/index";
 
 export default function App() {
   const [schemaType, setSchemaType] = useState<"star" | "snowflake">("star");
+  const [starSchema, setStarSchema] = useState<DataSchemaData>(
+    starSchemaData as DataSchemaData
+  );
+  const [snowflakeSchema, setSnowflakeSchema] = useState<DataSchemaData>(
+    snowflakeSchemaData as DataSchemaData
+  );
 
   const handleSchemaChange = (type: "star" | "snowflake") => {
     setSchemaType(type);
+  };
+
+  const handleSchemaUpdate = (updatedSchema: DataSchemaData) => {
+    if (schemaType === "star") {
+      setStarSchema(updatedSchema);
+    } else {
+      setSnowflakeSchema(updatedSchema);
+    }
   };
 
   return (
@@ -39,11 +53,8 @@ export default function App() {
       </div>
       <div className="flex-1 overflow-hidden">
         <DataSchema
-          schemaData={
-            schemaType === "star"
-              ? (starSchemaData as DataSchemaData)
-              : (snowflakeSchemaData as DataSchemaData)
-          }
+          schemaData={schemaType === "star" ? starSchema : snowflakeSchema}
+          onSchemaUpdate={handleSchemaUpdate}
         />
       </div>
     </div>
