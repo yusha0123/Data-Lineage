@@ -112,7 +112,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             </label>
             <button
               onClick={handleAddField}
-              className="text-xs bg-blue-500 text-white px-2 py-1 rounded-md"
+              className="text-xs bg-blue-500 text-white px-2 py-1 rounded-md cursor-pointer transition duration-300 hover:bg-blue-500/90"
             >
               + Add Field
             </button>
@@ -225,8 +225,13 @@ const Sidebar: React.FC<SidebarProps> = ({
                   <select
                     value={field.references || ""}
                     onChange={(e) => {
-                      handleFieldChange(index, "references", e.target.value);
-                      handleFieldChange(index, "name", ""); // reset name when reference changes
+                      const updatedFields = [...fields];
+                      updatedFields[index] = {
+                        ...updatedFields[index],
+                        references: e.target.value,
+                        name: "", // reset name when reference changes
+                      };
+                      setFields(updatedFields);
                     }}
                     className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md"
                   >
