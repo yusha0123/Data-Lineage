@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { type Node } from "@xyflow/react";
-import { FiTrash } from "react-icons/fi";
+import { FiTrash, FiX } from "react-icons/fi";
 
 interface SidebarProps {
   selectedNode: Node | null;
@@ -86,9 +86,9 @@ const Sidebar: React.FC<SidebarProps> = ({
         </h2>
         <button
           onClick={onClose}
-          className="text-gray-500 hover:text-gray-700 cursor-pointer"
+          className="text-gray-500 hover:text-gray-700 transition duration-300 cursor-pointer"
         >
-          ✕
+          <FiX className="w-5 h-5" />
         </button>
       </div>
 

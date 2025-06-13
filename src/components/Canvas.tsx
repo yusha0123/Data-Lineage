@@ -104,14 +104,27 @@ const Canvas: React.FC<CanvasProps> = ({
         <Background />
       </ReactFlow>
 
-      {sidebarVisible && selectedNode && (
-        <Sidebar
-          selectedNode={selectedNode}
-          onClose={handleCloseSidebar}
-          onUpdate={handleUpdateNode}
-          allNodes={nodes}
+      {sidebarVisible && (
+        <div
+          className="fixed inset-0 bg-black/20 z-40"
+          onClick={handleCloseSidebar}
         />
       )}
+
+      <div
+        className={`fixed top-0 right-0 h-full w-80 bg-white shadow-lg transform transition-transform duration-300 z-50 ${
+          sidebarVisible ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        {selectedNode && (
+          <Sidebar
+            selectedNode={selectedNode}
+            onClose={handleCloseSidebar}
+            onUpdate={handleUpdateNode}
+            allNodes={nodes}
+          />
+        )}
+      </div>
 
       {tooltipNode && (
         <Tooltip
