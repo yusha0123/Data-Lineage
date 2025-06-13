@@ -38,3 +38,17 @@ type InputData = {
     destinations: DestinationNodeData[];
     finalTable: EndNodeData;
 };
+
+type Field = {
+    name: string;
+    type: 'string' | 'int' | 'float' | 'date' | 'boolean';
+    isPrimaryKey?: boolean;
+    isForeignKey?: boolean;
+    references?: string;
+};
+
+interface NodeData {
+    label: string;
+    fields: Field[];
+    isFactTable?: boolean;
+}

@@ -8,7 +8,6 @@ import {
   useNodesState,
   useEdgesState,
 } from "@xyflow/react";
-import "@xyflow/react/dist/style.css";
 import Sidebar from "./Sidebar";
 import Tooltip from "./Tooltip";
 
@@ -70,16 +69,11 @@ const Canvas: React.FC<CanvasProps> = ({
     setSelectedNode(null);
   };
 
-  const handleNodeMouseEnter = (
-    _: React.MouseEvent,
-    node: Node,
-    event: React.MouseEvent
-  ) => {
+  const handleNodeMouseEnter = (event: React.MouseEvent, node: Node) => {
     setTooltipNode(node);
     setTooltipPosition({ x: event.clientX, y: event.clientY });
     setTooltipVisible(true);
   };
-
   const handleNodeMouseLeave = () => {
     setTooltipVisible(false);
   };
@@ -115,6 +109,7 @@ const Canvas: React.FC<CanvasProps> = ({
           selectedNode={selectedNode}
           onClose={handleCloseSidebar}
           onUpdate={handleUpdateNode}
+          allNodes={nodes}
         />
       )}
 
