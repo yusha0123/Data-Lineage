@@ -1,28 +1,41 @@
 import React, { useState, useEffect } from "react";
-import { Node } from "@xyflow/react";
-import { Field } from "../types";
+import { type Node } from "@xyflow/react";
+import { FiTrash } from "react-icons/fi";
 
 interface SidebarProps {
   selectedNode: Node | null;
   onClose: () => void;
   onUpdate: (nodeId: string, data: any) => void;
+  allNodes: Node[];
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
   selectedNode,
   onClose,
   onUpdate,
+  allNodes,
 }) => {
   const [formData, setFormData] = useState<any>(null);
   const [fields, setFields] = useState<Field[]>([]);
+  const dimensionNodes = allNodes.filter(
+    (n) => n.data && n.data.isFactTable === false
+  );
+  const dimensionFieldsMap = dimensionNodes.reduce((acc, node) => {
+    const data = node.data as unknown as NodeData;
+    acc[data.label] = data.fields || [];
+    return acc;
+  }, {} as Record<string, Field[]>);
 
   useEffect(() => {
     if (selectedNode?.data) {
+      const nodeData = selectedNode.data as unknown as NodeData;
+
       setFormData({
-        label: selectedNode.data.label,
-        isFactTable: selectedNode.data.isFactTable || false,
+        label: nodeData.label,
+        isFactTable: nodeData.isFactTable || false,
       });
-      setFields(selectedNode.data.fields || []);
+
+      setFields(Array.isArray(nodeData.fields) ? nodeData.fields : []);
     } else {
       setFormData(null);
       setFields([]);
@@ -71,7 +84,10 @@ const Sidebar: React.FC<SidebarProps> = ({
         <h2 className="text-lg font-bold">
           Edit {formData.isFactTable ? "Fact" : "Dimension"} Table
         </h2>
-        <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+        <button
+          onClick={onClose}
+          className="text-gray-500 hover:text-gray-700 cursor-pointer"
+        >
           ✕
         </button>
       </div>
@@ -111,9 +127,10 @@ const Sidebar: React.FC<SidebarProps> = ({
                 <span className="text-sm font-medium">Field {index + 1}</span>
                 <button
                   onClick={() => handleRemoveField(index)}
-                  className="text-xs text-red-500"
+                  className="text-red-500 hover:text-red-700 transition duration-300 cursor-pointer"
+                  title="Delete field"
                 >
-                  Remove
+                  <FiTrash size={16} />
                 </button>
               </div>
 
@@ -122,15 +139,33 @@ const Sidebar: React.FC<SidebarProps> = ({
                   <label className="block text-xs text-gray-500 mb-1">
                     Name
                   </label>
-                  <input
-                    type="text"
-                    value={field.name}
-                    onChange={(e) =>
-                      handleFieldChange(index, "name", e.target.value)
-                    }
-                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md"
-                  />
+                  {field.isForeignKey && field.references ? (
+                    <select
+                      value={field.name}
+                      onChange={(e) =>
+                        handleFieldChange(index, "name", e.target.value)
+                      }
+                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md"
+                    >
+                      <option value="">Select field</option>
+                      {(dimensionFieldsMap[field.references] || []).map((f) => (
+                        <option key={f.name} value={f.name}>
+                          {f.name}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type="text"
+                      value={field.name}
+                      onChange={(e) =>
+                        handleFieldChange(index, "name", e.target.value)
+                      }
+                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md"
+                    />
+                  )}
                 </div>
+
                 <div>
                   <label className="block text-xs text-gray-500 mb-1">
                     Type
@@ -187,14 +222,21 @@ const Sidebar: React.FC<SidebarProps> = ({
                   <label className="block text-xs text-gray-500 mb-1">
                     References Table
                   </label>
-                  <input
-                    type="text"
+                  <select
                     value={field.references || ""}
-                    onChange={(e) =>
-                      handleFieldChange(index, "references", e.target.value)
-                    }
+                    onChange={(e) => {
+                      handleFieldChange(index, "references", e.target.value);
+                      handleFieldChange(index, "name", ""); // reset name when reference changes
+                    }}
                     className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md"
-                  />
+                  >
+                    <option value="">Select table</option>
+                    {dimensionNodes.map((node) => (
+                      <option key={node.id} value={node.data.label as string}>
+                        {node.data.label as string}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               )}
             </div>

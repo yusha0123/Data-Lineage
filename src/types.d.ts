@@ -49,6 +49,6 @@ type Field = {
 
 interface NodeData {
     label: string;
-    fields: Field[];
+    fields?: Field[];
     isFactTable?: boolean;
 }
