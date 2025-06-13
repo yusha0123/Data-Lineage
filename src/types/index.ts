@@ -55,7 +55,7 @@ export interface DataSchemaData {
 }
 
 // Legacy type for backward compatibility
-export interface StarSchemaData extends DataSchemaData { }
+export type StarSchemaData = DataSchemaData
 
 export interface TableNodeProps {
     data: {

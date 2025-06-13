@@ -10,8 +10,9 @@ interface TooltipProps {
 const Tooltip: React.FC<TooltipProps> = ({ node, visible, position }) => {
   if (!visible) return null;
 
-  const isFactTable = node.data.isFactTable;
-  const fields = node.data.fields || [];
+  const data = node.data as unknown as NodeData;
+  const isFactTable = data.isFactTable;
+  const fields = data.fields || [];
   const primaryKeys = fields.filter((field) => field.isPrimaryKey);
   const foreignKeys = fields.filter((field) => field.isForeignKey);
 
@@ -23,14 +24,16 @@ const Tooltip: React.FC<TooltipProps> = ({ node, visible, position }) => {
         top: position.y + 10,
       }}
     >
-      <div className="font-bold border-b pb-1 mb-2">{node.data.label}</div>
+      <div className="font-bold border-b pb-1 mb-2">
+        {node.data.label as string}
+      </div>
       <div className="space-y-2">
         <div>
           <span className="font-medium">Type:</span>{" "}
           {isFactTable ? "Fact Table" : "Dimension Table"}
         </div>
         <div>
-          <span className="font-medium">Fields:</span> {fields.length}
+          <span className="font-medium">Fields:</span> {fields?.length}
         </div>
         <div>
           <span className="font-medium">Primary Keys:</span>{" "}
