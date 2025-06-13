@@ -2,7 +2,6 @@ import { useState } from "react";
 import DataSchema from "./components/DataSchema";
 import starSchemaData from "./data/starSchema.json";
 import snowflakeSchemaData from "./data/snowflakeSchema.json";
-import type { DataSchemaData } from "./types/index";
 
 export default function App() {
   const [schemaType, setSchemaType] = useState<"star" | "snowflake">("star");
