@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 import Canvas from "./Canvas";
 import { nodeTypes } from "./NodeTypes";
 import { generateDataSchemaLayout } from "../utils/layout";
-import type { DataSchemaData, Field } from "../types/index";
 import type { Node } from "@xyflow/react";
 
 interface DataSchemaProps {

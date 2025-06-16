@@ -1,5 +1,4 @@
 import { Position, type Edge, type Node } from '@xyflow/react';
-import type { DataSchemaData, StarSchemaData, Relationship } from '../types/index';
 
 const RADIUS = 350;
 const CENTER_X = 400;

@@ -2,7 +2,6 @@ import React from "react";
 import Canvas from "./Canvas";
 import { nodeTypes } from "./NodeTypes";
 import { generateStarSchemaLayout } from "../utils/layout";
-import type { StarSchemaData } from "../types/index";
 
 interface StarSchemaProps {
   schemaData: StarSchemaData;
