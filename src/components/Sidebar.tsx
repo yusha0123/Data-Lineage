@@ -276,13 +276,13 @@ const Sidebar: React.FC<SidebarProps> = ({
         <div className="pt-4 flex justify-end">
           <button
             onClick={onClose}
-            className="mr-2 px-4 py-2 text-sm border border-gray-300 rounded-md"
+            className="mr-2 px-4 py-2 text-sm border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 transition duration-300"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
-            className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md"
+            className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md cursor-pointer transition duration-300 hover:bg-blue-600/90"
           >
             Save Changes
           </button>
