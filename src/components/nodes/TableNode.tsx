@@ -1,5 +1,4 @@
 import { Handle, Position } from "@xyflow/react";
-import type { TableNodeProps } from "../../types/index";
 
 const TableNode = ({ data }: TableNodeProps) => {
   const isFactTable = data.isFactTable ?? false;

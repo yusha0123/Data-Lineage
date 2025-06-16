@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { type Node } from "@xyflow/react";
+import { type Edge, type Node } from "@xyflow/react";
 import { FiTrash, FiX } from "react-icons/fi";
 
 interface SidebarProps {
   selectedNode: Node | null;
   onClose: () => void;
-  onUpdate: (nodeId: string, data: any) => void;
+  onUpdate: (
+    nodeId: string,
+    updatedData: Node["data"],
+    newEdges: Edge[]
+  ) => void;
   allNodes: Node[];
 }
+
+type FormData = {
+  label: string;
+  isFactTable?: boolean | undefined;
+};
 
 const Sidebar: React.FC<SidebarProps> = ({
   selectedNode,
@@ -15,7 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   onUpdate,
   allNodes,
 }) => {
-  const [formData, setFormData] = useState<any>(null);
+  const [formData, setFormData] = useState<FormData | null>(null);
   const [fields, setFields] = useState<Field[]>([]);
   const dimensionNodes = allNodes.filter(
     (n) => n.data && n.data.isFactTable === false
@@ -67,11 +76,27 @@ const Sidebar: React.FC<SidebarProps> = ({
 
     const updatedData = {
       ...selectedNode.data,
-      label: formData.label,
+      label: formData?.label,
       fields: fields,
     };
 
-    onUpdate(selectedNode.id, updatedData);
+    const newEdges: Edge[] = fields
+      .filter((f) => f.isForeignKey && f.references)
+      .map((f) => {
+        const targetNode = allNodes.find((n) => n.data.label === f.references);
+        return {
+          id: `${selectedNode.id}-${targetNode?.id || f.references}`,
+          source: selectedNode.id,
+          target: targetNode?.id || "",
+          label: `${formData?.label}.${f.name} → ${f.references}`,
+          type: "default",
+          animated: true,
+          style: { strokeWidth: 2 },
+        };
+      })
+      .filter((e) => e.target !== "");
+
+    onUpdate(selectedNode.id, updatedData, newEdges);
   };
 
   if (!selectedNode || !formData) {

@@ -32,11 +32,20 @@ const Canvas: React.FC<CanvasProps> = ({
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
-  // Update nodes and edges when props change
   useEffect(() => {
-    setNodes(initialNodes);
-    setEdges(initialEdges);
-  }, [initialNodes, initialEdges, setNodes, setEdges]);
+    setNodes((prev) => {
+      const newNodeMap = new Map(initialNodes.map((n) => [n.id, n]));
+      return prev.map((n) => newNodeMap.get(n.id) || n);
+    });
+
+    setEdges((prev) => {
+      const existingEdgeIds = new Set(prev.map((e) => e.id));
+      const newEdges = initialEdges.filter((e) => !existingEdgeIds.has(e.id));
+      return [...prev, ...newEdges];
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialNodes, initialEdges]);
 
   const handleNodeDoubleClick = (_: React.MouseEvent, node: Node) => {
     setSelectedNode(node);
@@ -48,23 +57,25 @@ const Canvas: React.FC<CanvasProps> = ({
     setSelectedNode(null);
   };
 
-  const handleUpdateNode = (nodeId: string, data: any) => {
-    // Update the node locally
-    const updatedNodes = nodes.map((node) => {
-      if (node.id === nodeId) {
-        return { ...node, data };
-      }
-      return node;
-    });
+  const handleUpdateNode = (
+    nodeId: string,
+    updatedData: Node["data"],
+    newEdges: Edge[] = []
+  ) => {
+    const updatedNodes = nodes.map((node) =>
+      node.id === nodeId ? { ...node, data: updatedData } : node
+    );
+
+    const existingEdgeIds = new Set(edges.map((e) => e.id));
+    const uniqueEdges = newEdges.filter((e) => !existingEdgeIds.has(e.id));
 
     setNodes(updatedNodes);
+    setEdges((prevEdges) => [...prevEdges, ...uniqueEdges]);
 
-    // Callback to parent component if provided
     if (onNodesUpdate) {
       onNodesUpdate(updatedNodes);
     }
 
-    // Close the sidebar
     setSidebarVisible(false);
     setSelectedNode(null);
   };
