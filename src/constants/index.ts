@@ -1,96 +1,58 @@
-const sampleStart = {
-    name: 'Customer_DB_DL',
-    logo: 'https://upload.wikimedia.org/wikipedia/en/d/dd/MySQL_logo.svg',
-    timestamp: '05/02/2024 03:17 PM',
-    category: 'RDBMS',
-    database: 'datastore',
-    user: 'Yusha',
-};
-
-const samplePipeline = {
-    name: 'Customer_Pipeline',
-    timestamp: '05/02/2024 03:17 PM',
-    createdBy: 'Yusha',
-    modifiedBy: 'Vinay',
-};
-
-const sampleDestination = {
-    name: 'Customer',
-    timestamp: '05/02/2024 03:17 PM',
-    category: 'RDBMS',
-    database: 'sales',
-    user: 'Yusha',
-};
-
-const sampleEnd = {
-    name: 'customer_table',
-    timestamp: '05/02/2024 03:17 PM',
-    columns: [
-        { name: 'customer_id', type: 'int' },
-        { name: 'customer_name', type: 'string' },
-        { name: 'customer_phone', type: 'string' },
-        { name: 'email', type: 'string' },
-    ],
-};
-
-const rawNodes = [
+const SOURCE: PipelineEndpoint[] = [
     {
-        id: "1",
-        type: "startNode",
-        data: {
-            ref: "1",
-            name: "Customer_DB_DL",
-            logo: "https://upload.wikimedia.org/wikipedia/en/d/dd/MySQL_logo.svg",
-            timestamp: "05/02/2024 03:17 PM",
-            category: "RDBMS",
-            database: "datastore",
-            user: "Mohit",
+        id: 'source-1',
+        name: 'PostgreSQL Source',
+        type: 'source',
+        databaseType: 'PostgreSQL',
+        icon: '/assets/icons/postgresql.png',
+        config: {
+            host: 'localhost',
+            port: 5432,
+            database: 'sales_data',
+            user: 'source_user',
         },
     },
     {
-        id: "2",
-        type: "pipelineNode",
-        data: {
-            ref: "2",
-            name: "Customer_Pipeline",
-            timestamp: "05/02/2024 03:17 PM",
-            createdBy: "Mohit",
-            modifiedBy: "Vinay",
-        },
-    },
-    {
-        id: "3",
-        type: "destinationNode",
-        data: {
-            ref: "3",
-            name: "Customer",
-            timestamp: "05/02/2024 03:17 PM",
-            category: "RDBMS",
-            database: "sales",
-            user: "Mohit",
-        },
-    },
-    {
-        id: "4",
-        type: "endNode",
-        data: {
-            ref: "4",
-            name: "customer_table",
-            timestamp: "05/02/2024 03:17 PM",
-            columns: [
-                { name: "customer_id", type: "int" },
-                { name: "customer_name", type: "string" },
-                { name: "customer_phone", type: "string" },
-                { name: "email", type: "string" },
-            ],
+        id: 'source-2',
+        name: 'CSV File Source',
+        type: 'source',
+        databaseType: 'CSV',
+        icon: '/assets/icons/csv.png',
+        config: {
+            filePath: '/data/input.csv',
+            delimiter: ',',
         },
     },
 ];
 
-const rawEdges = [
-    { id: "e1-2", source: "1", target: "2" },
-    { id: "e2-3", source: "2", target: "3" },
-    { id: "e3-4", source: "3", target: "4" },
+const DESTINATION: PipelineEndpoint[] = [
+    {
+        id: 'dest-1',
+        name: 'Snowflake Destination',
+        type: 'destination',
+        databaseType: 'Snowflake',
+        icon: '/assets/icons/snowflake.png',
+        config: {
+            account: 'myaccount',
+            warehouse: 'compute_wh',
+            database: 'analytics',
+            user: 'dw_user',
+        },
+    },
+    {
+        id: 'dest-2',
+        name: 'API Destination',
+        type: 'destination',
+        databaseType: 'API',
+        icon: '/assets/icons/api.png',
+        config: {
+            endpoint: 'https://analytics.company.com/ingest',
+            method: 'POST',
+            headers: {
+                Authorization: 'Bearer <token>',
+            },
+        },
+    },
 ];
 
-export { sampleDestination, sampleEnd, samplePipeline, sampleStart, rawNodes, rawEdges };
+export { SOURCE, DESTINATION };

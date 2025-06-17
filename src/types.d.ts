@@ -110,3 +110,14 @@ interface TableNodeProps {
         handlePosition?: import("@xyflow/react").Position;
     };
 }
+
+type ValidTypes = string | boolean | number | Record
+
+type PipelineEndpoint = {
+    id: string;
+    name: string;
+    type: 'source' | 'destination';
+    databaseType: 'PostgreSQL' | 'CSV' | 'Snowflake' | 'API' | string;
+    icon: string;
+    config: Record<string, ValidTypes>;
+};
