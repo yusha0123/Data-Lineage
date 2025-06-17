@@ -1,0 +1,124 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { DESTINATION, SOURCE } from "@/constants";
+import { useOverlayStore } from "@/hooks/useOverlayStore";
+import { useState } from "react";
+import { MdCheckCircle, MdCancel } from "react-icons/md";
+import { useReactFlow } from "@xyflow/react";
+
+const EndPointModal = () => {
+  const {
+    isOpen,
+    onClose,
+    modalType,
+    overlayType,
+    selectedNodeId,
+    setSelectedNodeId,
+  } = useOverlayStore();
+  const isDialogOpen =
+    isOpen &&
+    overlayType === "Modal" &&
+    (modalType === "source" || modalType === "destination");
+
+  const isSourceModal = modalType === "source";
+  const dialogTitle = `Select a ${isSourceModal ? "Source" : "Destination"}`;
+  const endpoints = isSourceModal ? SOURCE : DESTINATION;
+  const { setNodes } = useReactFlow();
+
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const handleSelect = () => {
+    const selected = endpoints.find((e) => e.id === selectedId);
+    if (!selected || !selectedNodeId) return;
+
+    setNodes((prev) =>
+      prev.map((node) =>
+        node.id === selectedNodeId
+          ? {
+              ...node,
+              type: `${selected.type}-node`,
+              data: {
+                ...node.data,
+                label: selected.name,
+                icon: selected.icon,
+              },
+            }
+          : node
+      )
+    );
+
+    setSelectedId(null);
+    setSelectedNodeId(null);
+    onClose();
+  };
+
+  const handleCancel = () => {
+    setSelectedId(null);
+    onClose();
+  };
+
+  return (
+    <Dialog onOpenChange={onClose} open={isDialogOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{dialogTitle}</DialogTitle>
+        </DialogHeader>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 p-2">
+          {endpoints.map((endpoint) => (
+            <div
+              key={endpoint.id}
+              onClick={() => setSelectedId(endpoint.id)}
+              className={`border p-4 rounded-xl flex items-center gap-4 cursor-pointer transition ${
+                selectedId === endpoint.id
+                  ? "ring-2 ring-primary bg-muted"
+                  : "hover:shadow"
+              }`}
+            >
+              <img
+                src={endpoint.icon}
+                alt={endpoint.name}
+                width={50}
+                height={50}
+                style={{ objectFit: "contain" }}
+              />
+              <div>
+                <div className="font-semibold">{endpoint.name}</div>
+                <div className="text-sm text-muted-foreground">
+                  {endpoint.databaseType}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <DialogFooter className="mt-4">
+          <Button
+            variant="outline"
+            onClick={handleCancel}
+            className="flex items-center gap-2"
+          >
+            <MdCancel size={18} />
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSelect}
+            disabled={!selectedId}
+            className="flex items-center gap-2"
+          >
+            <MdCheckCircle size={18} />
+            Select
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default EndPointModal;

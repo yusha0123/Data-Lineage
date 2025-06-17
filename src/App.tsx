@@ -11,7 +11,7 @@ const initialNodes = [
 
 const App = () => {
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-[100dvh]">
       <ETLCanvas initialNodes={initialNodes} />
     </div>
   );
