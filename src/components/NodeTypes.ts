@@ -4,6 +4,8 @@ import DestinationNode from './nodes/DestinationNode';
 import EndNode from './nodes/EndNode';
 import TableNode from './nodes/TableNode';
 import AddSourceDestNode from './nodes/AddSourceDestNode';
+import SourceNode from './nodes/SourceNode';
+import ETLDestinationNode from './nodes/ETLDestinationNode';
 
 export const nodeTypes = {
     startNode: StartNode,
@@ -11,5 +13,7 @@ export const nodeTypes = {
     destinationNode: DestinationNode,
     endNode: EndNode,
     tableNode: TableNode,
-    addSourceDestNode: AddSourceDestNode
+    addSourceDestNode: AddSourceDestNode,
+    sourceNode: SourceNode,
+    etlDestinationNode: ETLDestinationNode
 };

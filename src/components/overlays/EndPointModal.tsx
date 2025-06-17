@@ -47,11 +47,12 @@ const EndPointModal = () => {
         node.id === selectedNodeId
           ? {
               ...node,
-              type: `${selected.type}-node`,
+              type: isSourceModal ? "sourceNode" : "etlDestinationNode",
               data: {
                 ...node.data,
                 label: selected.name,
                 icon: selected.icon,
+                databaseType: selected.databaseType,
               },
             }
           : node
