@@ -13,8 +13,9 @@ import type { Edge, Node } from "@xyflow/react";
 import { edgeTypes } from "./edgeTypes";
 
 const ETLCanvas = ({ initialNodes }: { initialNodes: Node[] }) => {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[]);
+  const [nodes, , onNodesChange] = useNodesState(initialNodes);
+  const [edges, , onEdgesChange] = useEdgesState([] as Edge[]);
+
   const { onOpen, setSelectedNodeId } = useOverlayStore();
 
   const onNodeDoubleClick = useCallback(
@@ -28,7 +29,6 @@ const ETLCanvas = ({ initialNodes }: { initialNodes: Node[] }) => {
         onOpen("Modal", "destination");
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [onOpen, setSelectedNodeId]
   );
 
