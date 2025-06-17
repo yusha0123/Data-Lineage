@@ -6,6 +6,9 @@ import TableNode from './nodes/TableNode';
 import AddSourceDestNode from './nodes/AddSourceDestNode';
 import SourceNode from './nodes/SourceNode';
 import ETLDestinationNode from './nodes/ETLDestinationNode';
+import SplitNode from './nodes/SplitNode';
+import AggregateNode from './nodes/AggregateNode';
+import FieldRemoverNode from './nodes/FieldRemoverNode';
 
 export const nodeTypes = {
     startNode: StartNode,
@@ -15,5 +18,8 @@ export const nodeTypes = {
     tableNode: TableNode,
     addSourceDestNode: AddSourceDestNode,
     sourceNode: SourceNode,
-    etlDestinationNode: ETLDestinationNode
+    etlDestinationNode: ETLDestinationNode,
+    splitNode: SplitNode,
+    aggregateNode: AggregateNode,
+    fieldRemoverNode: FieldRemoverNode,
 };

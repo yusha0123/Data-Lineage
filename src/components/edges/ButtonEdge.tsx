@@ -15,6 +15,8 @@ export default function ButtonEdge({
   targetY,
   sourcePosition,
   targetPosition,
+  source,
+  target,
   style = {},
   markerEnd,
 }: EdgeProps) {
@@ -42,7 +44,14 @@ export default function ButtonEdge({
         >
           <button
             className="w-8 h-8 rounded-full bg-white border border-gray-300 shadow-md flex items-center justify-center text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition cursor-pointer"
-            onClick={() => onOpen("Modal", "processor")}
+            onClick={() =>
+              onOpen("Modal", "processor", {
+                edgeContext: {
+                  sourceId: source,
+                  targetId: target,
+                },
+              })
+            }
           >
             <FiPlus size={16} />
           </button>

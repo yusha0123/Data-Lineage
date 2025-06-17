@@ -47,6 +47,7 @@ const ETLCanvas = ({ initialNodes }: { initialNodes: Node[] }) => {
         onOpen("Modal", "destination");
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [onOpen, setSelectedNodeId]
   );
 

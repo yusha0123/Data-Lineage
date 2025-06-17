@@ -11,19 +11,90 @@ import { useOverlayStore } from "@/hooks/useOverlayStore";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { MdCancel, MdCheckCircle } from "react-icons/md";
+import { useReactFlow } from "@xyflow/react";
+
+type ProcessorKey = "split" | "aggregate" | "fieldRemover" | "join";
 
 const ProcessorModal = () => {
-  const { isOpen, onClose, overlayType, modalType } = useOverlayStore();
+  const { isOpen, onClose, overlayType, modalType, data } = useOverlayStore();
+  const edgeContext = data?.edgeContext;
   const isDialogOpen =
     isOpen && overlayType === "Modal" && modalType === "processor";
+  const { setNodes, getNode, setEdges } = useReactFlow();
 
-  const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const [selectedKey, setSelectedKey] = useState<ProcessorKey | null>(null);
 
   const handleSelect = () => {
-    if (selectedKey) {
-      console.log("Selected Processor:", selectedKey);
-      onClose();
+    if (selectedKey && selectedKey !== "join") {
+      handleProcessorAdd(selectedKey as Exclude<ProcessorKey, "join">);
+      handleClose();
+    } else {
+      handleClose();
     }
+  };
+
+  const handleProcessorAdd = (key: Exclude<ProcessorKey, "join">) => {
+    const id = `${key}-${Date.now()}`;
+    const processorNodeMap = {
+      split: "splitNode",
+      aggregate: "aggregateNode",
+      fieldRemover: "fieldRemoverNode",
+    };
+
+    const type = processorNodeMap[key];
+    if (!type || !edgeContext) return;
+
+    const sourceNode = getNode(edgeContext.sourceId);
+    const targetNode = getNode(edgeContext.targetId);
+    if (!sourceNode || !targetNode) return;
+
+    const position = {
+      x: (sourceNode.position.x + targetNode.position.x) / 2,
+      y: (sourceNode.position.y + targetNode.position.y) / 2,
+    };
+
+    setNodes((nodes) => [
+      ...nodes,
+      {
+        id,
+        type,
+        position,
+        data: {
+          label: key[0].toUpperCase() + key.slice(1),
+        },
+      },
+    ]);
+
+    setEdges((edges) => {
+      const withoutOriginal = edges.filter(
+        (edge) =>
+          !(
+            edge.source === edgeContext.sourceId &&
+            edge.target === edgeContext.targetId
+          )
+      );
+
+      return [
+        ...withoutOriginal,
+        {
+          id: `e-${edgeContext.sourceId}-${id}`,
+          source: edgeContext.sourceId,
+          target: id,
+          type: "buttonedge",
+        },
+        {
+          id: `e-${id}-${edgeContext.targetId}`,
+          source: id,
+          target: edgeContext.targetId,
+          type: "buttonedge",
+        },
+      ];
+    });
+  };
+
+  const handleClose = () => {
+    setSelectedKey(null);
+    onClose();
   };
 
   return (
@@ -46,7 +117,7 @@ const ProcessorModal = () => {
                     ? "border-blue-500 bg-blue-50"
                     : "hover:bg-gray-50"
                 )}
-                onClick={() => setSelectedKey(processor.key)}
+                onClick={() => setSelectedKey(processor.key as ProcessorKey)}
               >
                 <div className="flex items-center gap-2 font-semibold">
                   <Icon className="w-5 h-5" />
@@ -63,7 +134,7 @@ const ProcessorModal = () => {
         <DialogFooter className="flex justify-end gap-2 pt-4">
           <Button
             variant="outline"
-            onClick={onClose}
+            onClick={handleClose}
             className="flex items-center gap-2"
           >
             <MdCancel size={18} />

@@ -1,4 +1,3 @@
-import type { Edge } from "@xyflow/react";
 import ETLCanvas from "./components/ETLCanvas";
 
 const initialNodes = [
