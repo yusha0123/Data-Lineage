@@ -27,14 +27,19 @@ const EndPointModal = () => {
     (modalType === "source" || modalType === "destination");
 
   const isSourceModal = modalType === "source";
+  const isDestinationModal = modalType === "destination";
   const dialogTitle = `Select a ${isSourceModal ? "Source" : "Destination"}`;
-  const endpoints = isSourceModal ? SOURCE : DESTINATION;
+  const endpoints = isSourceModal
+    ? SOURCE
+    : isDestinationModal
+    ? DESTINATION
+    : null;
   const { setNodes } = useReactFlow();
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const handleSelect = () => {
-    const selected = endpoints.find((e) => e.id === selectedId);
+    const selected = endpoints?.find((e) => e.id === selectedId);
     if (!selected || !selectedNodeId) return;
 
     setNodes((prev) =>
@@ -71,7 +76,7 @@ const EndPointModal = () => {
         </DialogHeader>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 p-2">
-          {endpoints.map((endpoint) => (
+          {endpoints?.map((endpoint) => (
             <div
               key={endpoint.id}
               onClick={() => setSelectedId(endpoint.id)}
