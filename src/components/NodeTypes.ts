@@ -3,7 +3,7 @@ import PipelineNode from './nodes/PipelineNode';
 import DestinationNode from './nodes/DestinationNode';
 import EndNode from './nodes/EndNode';
 import TableNode from './nodes/TableNode';
-import AddSourceNode from './nodes/AddSourceNode';
+import AddSourceDestNode from './nodes/AddSourceDestNode';
 
 export const nodeTypes = {
     startNode: StartNode,
@@ -11,5 +11,5 @@ export const nodeTypes = {
     destinationNode: DestinationNode,
     endNode: EndNode,
     tableNode: TableNode,
-    addSourceNode: AddSourceNode
+    addSourceDestNode: AddSourceDestNode
 };

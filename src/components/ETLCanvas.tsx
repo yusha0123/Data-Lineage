@@ -3,22 +3,35 @@ import {
   BackgroundVariant,
   Controls,
   ReactFlow,
+  useEdgesState,
   useNodesState,
 } from "@xyflow/react";
 import { nodeTypes } from "./NodeTypes";
-import type { Node } from "@xyflow/react";
 import { useOverlayStore } from "@/hooks/useOverlayStore";
 import { useCallback } from "react";
+import type { Edge, Node } from "@xyflow/react";
+import { edgeTypes } from "./edgeTypes";
 
-const ETLCanvas = ({ initialNodes }: { initialNodes: Node[] }) => {
+const ETLCanvas = ({
+  initialNodes,
+  initialEdges,
+}: {
+  initialNodes: Node[];
+  initialEdges: Edge[];
+}) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const { onOpen, setSelectedNodeId } = useOverlayStore();
 
   const onNodeDoubleClick = useCallback(
     (_event: React.MouseEvent, node: Node) => {
-      if (node.type === "addSourceNode") {
+      if (node.data.type === "add-source") {
         setSelectedNodeId(node.id);
         onOpen("Modal", "source");
+      }
+      if (node.data.type === "add-destination") {
+        setSelectedNodeId(node.id);
+        onOpen("Modal", "destination");
       }
     },
     [onOpen, setSelectedNodeId]
@@ -31,6 +44,9 @@ const ETLCanvas = ({ initialNodes }: { initialNodes: Node[] }) => {
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
         onNodeDoubleClick={onNodeDoubleClick}
+        edges={edges}
+        onEdgesChange={onEdgesChange}
+        edgeTypes={edgeTypes}
       >
         <Controls />
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
