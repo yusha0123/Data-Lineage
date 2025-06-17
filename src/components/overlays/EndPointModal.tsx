@@ -34,7 +34,7 @@ const EndPointModal = () => {
     : isDestinationModal
     ? DESTINATION
     : null;
-  const { setNodes } = useReactFlow();
+  const { setNodes, setEdges, getNode } = useReactFlow();
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -58,6 +58,31 @@ const EndPointModal = () => {
           : node
       )
     );
+
+    if (isSourceModal) {
+      setNodes((prev) => [
+        ...prev,
+        {
+          id: "2",
+          type: "addSourceDestNode",
+          position: { x: 550, y: 250 },
+          data: { label: "Add Destination", type: "add-destination" },
+        },
+      ]);
+
+      const node = getNode(selectedNodeId);
+      if (!node?.data.isJoin) {
+        setEdges((prev) => [
+          ...prev,
+          {
+            id: `e-${selectedNodeId}-2`,
+            source: selectedNodeId,
+            target: "2",
+            type: "buttonedge",
+          },
+        ]);
+      }
+    }
 
     setSelectedId(null);
     setSelectedNodeId(null);
