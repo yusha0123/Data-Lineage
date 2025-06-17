@@ -2,6 +2,10 @@ import postgresIcon from "@/assets/icons/postgresql.png";
 import csvIcon from "@/assets/icons/csv.png";
 import snowflakeIcon from "@/assets/icons/snowflake.png";
 import apiIcon from "@/assets/icons/api.png";
+import joinIcon from "@/assets/icons/join.svg?react";
+import aggregateIcon from "@/assets/icons/aggregate.svg?react";
+import fieldRemoverIcon from "@/assets/icons/field-remover.svg?react";
+import splitIcon from "@/assets/icons/split.svg?react";
 
 const SOURCE: PipelineEndpoint[] = [
     {
@@ -60,4 +64,34 @@ const DESTINATION: PipelineEndpoint[] = [
     },
 ];
 
-export { SOURCE, DESTINATION };
+const PROCESSOR_OPTIONS = [
+    {
+        key: "split",
+        label: "Split",
+        description: "Extracts information from fields or splits single field into multiple fields.",
+        icon: splitIcon,
+    },
+    {
+        key: "fieldRemover",
+        label: "Field remover",
+        description: "Deletes one or more fields from a dataset.",
+        icon: fieldRemoverIcon,
+    },
+    {
+        key: "aggregate",
+        label: "Aggregate",
+        description:
+            "Aggregates the incoming schema based on one or more columns, performs sets of operations.",
+        icon: aggregateIcon,
+    },
+    {
+        key: "join",
+        label: "Join",
+        description:
+            "Transforms several existing datasets to a new set of combined records.",
+        icon: joinIcon,
+    },
+];
+
+
+export { SOURCE, DESTINATION, PROCESSOR_OPTIONS };
