@@ -35,14 +35,6 @@ export default function AddSourceDestNode({ data }: AddSourceDestNodeProps) {
           className="!w-3 !h-3 !bg-gray-400 !border-2 !border-white"
         />
       )}
-
-      {data.type === "add-source" && (
-        <Handle
-          type="source"
-          position={Position.Right}
-          className="!w-3 !h-3 !bg-gray-400 !border-2 !border-white"
-        />
-      )}
     </div>
   );
 }

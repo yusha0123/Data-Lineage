@@ -22,7 +22,7 @@ export default function ETLDestinationNode({ data }: ETLDestinationNodeProps) {
       <Handle
         type="target"
         position={Position.Left}
-        className="!w-3 !h-3 !bg-gray-400 !border-2 !border-white"
+        className="!w-3 !h-3 !bg-purple-500 !border-2 !border-white"
       />
     </div>
   );

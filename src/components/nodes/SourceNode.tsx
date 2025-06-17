@@ -22,7 +22,7 @@ export default function SourceNode({ data }: SourceNodeProps) {
       <Handle
         type="source"
         position={Position.Right}
-        className="!w-3 !h-3 !bg-gray-400 !border-2 !border-white"
+        className="!w-3 !h-3 !bg-green-500 !border-2 !border-white"
       />
     </div>
   );
