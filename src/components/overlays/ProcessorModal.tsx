@@ -10,6 +10,7 @@ import { PROCESSOR_OPTIONS } from "@/constants";
 import { useOverlayStore } from "@/hooks/useOverlayStore";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { MdCancel, MdCheckCircle } from "react-icons/md";
 
 const ProcessorModal = () => {
   const { isOpen, onClose, overlayType, modalType } = useOverlayStore();
@@ -60,10 +61,20 @@ const ProcessorModal = () => {
         </div>
 
         <DialogFooter className="flex justify-end gap-2 pt-4">
-          <Button variant="outline" onClick={onClose}>
+          <Button
+            variant="outline"
+            onClick={onClose}
+            className="flex items-center gap-2"
+          >
+            <MdCancel size={18} />
             Cancel
           </Button>
-          <Button disabled={!selectedKey} onClick={handleSelect}>
+          <Button
+            onClick={handleSelect}
+            disabled={!selectedKey}
+            className="flex items-center gap-2"
+          >
+            <MdCheckCircle size={18} />
             Select
           </Button>
         </DialogFooter>
