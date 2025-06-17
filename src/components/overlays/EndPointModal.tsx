@@ -60,24 +60,27 @@ const EndPointModal = () => {
     );
 
     if (isSourceModal) {
-      setNodes((prev) => [
-        ...prev,
-        {
-          id: "2",
-          type: "addSourceDestNode",
-          position: { x: 550, y: 250 },
-          data: { label: "Add Destination", type: "add-destination" },
-        },
-      ]);
-
       const node = getNode(selectedNodeId);
+      const newNodeId = `add-dest-${Date.now()}`;
       if (!node?.data.isJoin) {
+        setNodes((prev) => [
+          ...prev,
+          {
+            id: newNodeId,
+            type: "addSourceDestNode",
+            position: {
+              x: (node?.position.x || 0) + 300,
+              y: (node?.position.y || 0) + 100,
+            },
+            data: { label: "Add Destination", type: "add-destination" },
+          },
+        ]);
         setEdges((prev) => [
           ...prev,
           {
-            id: `e-${selectedNodeId}-2`,
+            id: `e-${selectedNodeId}-${newNodeId}`,
             source: selectedNodeId,
-            target: "2",
+            target: newNodeId,
             type: "buttonedge",
           },
         ]);
