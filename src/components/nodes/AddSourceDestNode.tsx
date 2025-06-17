@@ -4,6 +4,7 @@ interface AddSourceDestNodeProps {
   data: {
     label: string;
     type: "add-source" | "add-destination";
+    isJoin?: boolean;
   };
 }
 
@@ -32,6 +33,13 @@ export default function AddSourceDestNode({ data }: AddSourceDestNodeProps) {
         <Handle
           type="target"
           position={Position.Left}
+          className="!w-3 !h-3 !bg-gray-400 !border-2 !border-white"
+        />
+      )}
+      {data.type === "add-source" && data.isJoin && (
+        <Handle
+          type="source"
+          position={Position.Right}
           className="!w-3 !h-3 !bg-gray-400 !border-2 !border-white"
         />
       )}

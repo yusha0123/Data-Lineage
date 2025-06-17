@@ -22,25 +22,27 @@ const ETLCanvas = ({ initialNodes }: { initialNodes: Node[] }) => {
       if (node.data.type === "add-source") {
         setSelectedNodeId(node.id);
         onOpen("Modal", "source");
-        setNodes([
-          ...nodes,
-          {
-            id: "2",
-            type: "addSourceDestNode",
-            position: { x: 550, y: 250 },
-            data: { label: "Add Destination", type: "add-destination" },
-          },
-        ]);
+        if (node.id === "1") {
+          setNodes((nds) => [
+            ...nds,
+            {
+              id: "2",
+              type: "addSourceDestNode",
+              position: { x: 550, y: 250 },
+              data: { label: "Add Destination", type: "add-destination" },
+            },
+          ]);
 
-        setEdges((prev: Edge[]) => [
-          ...prev,
-          {
-            id: "e1-2",
-            source: "1",
-            target: "2",
-            type: "buttonedge",
-          },
-        ]);
+          setEdges((prev) => [
+            ...prev,
+            {
+              id: "e1-2",
+              source: "1",
+              target: "2",
+              type: "buttonedge",
+            },
+          ]);
+        }
       }
       if (node.data.type === "add-destination") {
         setSelectedNodeId(node.id);

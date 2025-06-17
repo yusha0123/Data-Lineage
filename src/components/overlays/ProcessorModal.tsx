@@ -16,7 +16,15 @@ import { useReactFlow } from "@xyflow/react";
 type ProcessorKey = "split" | "aggregate" | "fieldRemover" | "join";
 
 const ProcessorModal = () => {
-  const { isOpen, onClose, overlayType, modalType, data } = useOverlayStore();
+  const {
+    isOpen,
+    onClose,
+    overlayType,
+    modalType,
+    data,
+    onOpen,
+    setSelectedNodeId,
+  } = useOverlayStore();
   const edgeContext = data?.edgeContext;
   const isDialogOpen =
     isOpen && overlayType === "Modal" && modalType === "processor";
@@ -25,20 +33,99 @@ const ProcessorModal = () => {
   const [selectedKey, setSelectedKey] = useState<ProcessorKey | null>(null);
 
   const handleSelect = () => {
-    if (selectedKey && selectedKey !== "join") {
-      handleProcessorAdd(selectedKey as Exclude<ProcessorKey, "join">);
-      handleClose();
-    } else {
+    if (selectedKey) {
+      if (selectedKey === "join") {
+        handleJoinNodeAdd();
+      } else {
+        handleProcessorAdd(selectedKey);
+      }
       handleClose();
     }
   };
 
-  const handleProcessorAdd = (key: Exclude<ProcessorKey, "join">) => {
+  const handleJoinNodeAdd = () => {
+    const id = `join-${Date.now()}`;
+    const addSourceId = `add-source-${Date.now()}`;
+    if (!edgeContext) return;
+
+    const sourceNode = getNode(edgeContext.sourceId);
+    const targetNode = getNode(edgeContext.targetId);
+    if (!sourceNode || !targetNode) return;
+
+    const position = {
+      x: (sourceNode.position.x + targetNode.position.x) / 2,
+      y: (sourceNode.position.y + targetNode.position.y) / 2,
+    };
+
+    const newNodes = [
+      {
+        id,
+        type: "joinNode",
+        position,
+        data: {
+          label: "Join",
+        },
+      },
+      {
+        id: addSourceId,
+        type: "addSourceDestNode",
+        position: {
+          x: position.x - 150,
+          y: position.y - 150,
+        },
+        data: {
+          label: "Add Source",
+          type: "add-source",
+          isJoin: true,
+        },
+      },
+    ];
+
+    setNodes((nodes) => [...nodes, ...newNodes]);
+
+    setEdges((edges) => {
+      const withoutOriginal = edges.filter(
+        (edge) =>
+          !(
+            edge.source === edgeContext.sourceId &&
+            edge.target === edgeContext.targetId
+          )
+      );
+
+      return [
+        ...withoutOriginal,
+        {
+          id: `e-${edgeContext.sourceId}-${id}`,
+          source: edgeContext.sourceId,
+          target: id,
+          type: "buttonedge",
+        },
+        {
+          id: `e-${id}-${edgeContext.targetId}`,
+          source: id,
+          target: edgeContext.targetId,
+          type: "buttonedge",
+        },
+        {
+          id: `e-${addSourceId}-${id}`,
+          source: addSourceId,
+          target: id,
+          type: "buttonedge",
+        },
+      ];
+    });
+
+    setSelectedNodeId(addSourceId);
+    onOpen("Modal", "source");
+  };
+
+  const handleProcessorAdd = (key: ProcessorKey) => {
     const id = `${key}-${Date.now()}`;
     const processorNodeMap = {
       split: "splitNode",
       aggregate: "aggregateNode",
       fieldRemover: "fieldRemoverNode",
+      join: "joinNode",
     };
 
     const type = processorNodeMap[key];

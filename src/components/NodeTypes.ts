@@ -9,6 +9,7 @@ import ETLDestinationNode from './nodes/ETLDestinationNode';
 import SplitNode from './nodes/SplitNode';
 import AggregateNode from './nodes/AggregateNode';
 import FieldRemoverNode from './nodes/FieldRemoverNode';
+import JoinNode from './nodes/JoinNode';
 
 export const nodeTypes = {
     startNode: StartNode,
@@ -22,4 +23,5 @@ export const nodeTypes = {
     splitNode: SplitNode,
     aggregateNode: AggregateNode,
     fieldRemoverNode: FieldRemoverNode,
+    joinNode: JoinNode,
 };
