@@ -5,6 +5,7 @@ interface AddEndPointNodeProps {
     label: string;
     type: "add-source" | "add-destination";
     isJoin?: boolean;
+    afterDelete?: boolean;
   };
 }
 
@@ -36,7 +37,7 @@ export default function AddEndpointNode({ data }: AddEndPointNodeProps) {
           className="!w-3 !h-3 !bg-gray-400 !border-2 !border-white"
         />
       )}
-      {data.type === "add-source" && data.isJoin && (
+      {data.type === "add-source" && (data.isJoin || data.afterDelete) && (
         <Handle
           type="source"
           position={Position.Right}

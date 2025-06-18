@@ -36,6 +36,7 @@ export const NodeWrapper = ({ nodeId, children }: Props) => {
         data: {
           label: isDestination ? "Add Destination" : "Add Source",
           type: isDestination ? "add-destination" : "add-source",
+          afterDelete: true,
         },
       };
 
