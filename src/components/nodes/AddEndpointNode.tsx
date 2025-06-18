@@ -1,6 +1,6 @@
 import { Handle, Position } from "@xyflow/react";
 
-interface AddSourceDestNodeProps {
+interface AddEndPointNodeProps {
   data: {
     label: string;
     type: "add-source" | "add-destination";
@@ -8,7 +8,7 @@ interface AddSourceDestNodeProps {
   };
 }
 
-export default function AddSourceDestNode({ data }: AddSourceDestNodeProps) {
+export default function AddEndpointNode({ data }: AddEndPointNodeProps) {
   return (
     <div className="w-60 h-32 bg-green-100 border-2 border-dashed border-green-500 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-green-200">
       <div className="w-12 h-12 rounded-full flex border-2 border-gray-600 items-center justify-center mb-2">

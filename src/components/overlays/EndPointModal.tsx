@@ -1,6 +1,7 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -67,7 +68,7 @@ const EndPointModal = () => {
           ...prev,
           {
             id: newNodeId,
-            type: "addSourceDestNode",
+            type: "addEndpointNode",
             position: {
               x: (node?.position.x || 0) + 300,
               y: (node?.position.y || 0) + 100,
@@ -101,7 +102,12 @@ const EndPointModal = () => {
     <Dialog onOpenChange={onClose} open={isDialogOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{dialogTitle}</DialogTitle>
+          <DialogTitle className="text-center">{dialogTitle}</DialogTitle>
+          <DialogDescription className="text-sm text-center text-muted-foreground">
+            Choose a {isSourceModal ? "source" : "destination"} system from the
+            list below. This will connect your pipeline to the selected database
+            or data platform.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 p-2">

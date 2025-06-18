@@ -9,20 +9,66 @@ type Props = {
 
 export const NodeWrapper = ({ nodeId, children }: Props) => {
   const [hovered, setHovered] = useState(false);
-  const { setNodes, setEdges } = useReactFlow();
+  const { setNodes, setEdges, getNodes, getEdges } = useReactFlow();
 
   const handleDelete = () => {
     if (!window.confirm("Are you sure you want to delete this node?")) return;
 
-    setNodes((nodes) => {
-      const nodeToDelete = nodes.find((n) => n.id === nodeId);
-      if (!nodeToDelete) return nodes;
-      return nodes.filter((n) => n.id !== nodeId);
-    });
+    const nodes = getNodes();
+    const nodeToDelete = nodes.find((n) => n.id === nodeId);
+    if (!nodeToDelete) return;
 
-    setEdges((edges) => {
-      const incomingEdges = edges.filter((e) => e.target === nodeId);
-      const outgoingEdges = edges.filter((e) => e.source === nodeId);
+    const isSource = nodeToDelete.type === "sourceNode";
+    const isDestination = nodeToDelete.type === "etlDestinationNode";
+
+    const newNodeId = crypto.randomUUID();
+
+    const oldEdges = getEdges();
+
+    if (isSource || isDestination) {
+      const placeholderNode = {
+        id: newNodeId,
+        type: "addEndpointNode",
+        position: {
+          x: nodeToDelete.position?.x || 0,
+          y: nodeToDelete.position?.y || 0,
+        },
+        data: {
+          label: isDestination ? "Add Destination" : "Add Source",
+          type: isDestination ? "add-destination" : "add-source",
+        },
+      };
+
+      // Remove the node and add the new one
+      setNodes((prev) => [
+        ...prev.filter((n) => n.id !== nodeId),
+        placeholderNode,
+      ]);
+
+      // Reconnect any edges to the new placeholder node
+      const remappedEdges = oldEdges.map((e) => {
+        if (e.source === nodeId || e.target === nodeId) {
+          return {
+            ...e,
+            id: `${e.source === nodeId ? newNodeId : e.source}-${
+              e.target === nodeId ? newNodeId : e.target
+            }`,
+            source: e.source === nodeId ? newNodeId : e.source,
+            target: e.target === nodeId ? newNodeId : e.target,
+          };
+        }
+        return e;
+      });
+
+      setEdges(remappedEdges);
+      return;
+    }
+    // For all other nodes — normal delete + edge rewiring
+    setNodes((prevNodes) => prevNodes.filter((n) => n.id !== nodeId));
+
+    setEdges((prevEdges) => {
+      const incomingEdges = prevEdges.filter((e) => e.target === nodeId);
+      const outgoingEdges = prevEdges.filter((e) => e.source === nodeId);
 
       const newEdges = [];
 
@@ -34,12 +80,12 @@ export const NodeWrapper = ({ nodeId, children }: Props) => {
             target: outEdge.target,
             sourceHandle: inEdge.sourceHandle || null,
             targetHandle: outEdge.targetHandle || null,
-            type: inEdge.type || outEdge.type || "default", // fallback to default
+            type: inEdge.type || outEdge.type || "default",
           });
         }
       }
 
-      return edges
+      return prevEdges
         .filter((e) => e.source !== nodeId && e.target !== nodeId)
         .concat(newEdges);
     });

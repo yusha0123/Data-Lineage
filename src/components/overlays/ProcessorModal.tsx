@@ -4,6 +4,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { PROCESSOR_OPTIONS } from "@/constants";
@@ -68,7 +69,7 @@ const ProcessorModal = () => {
       },
       {
         id: addSourceId,
-        type: "addSourceDestNode",
+        type: "addEndpointNode",
         position: {
           x: position.x - 150,
           y: position.y - 150,
@@ -189,6 +190,11 @@ const ProcessorModal = () => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-center">Select a Processor</DialogTitle>
+          <DialogDescription className="text-center text-sm text-muted-foreground">
+            Choose a processor to apply between the selected source and
+            destination. This will insert a processing step such as Split,
+            Aggregate, Field Remover, or Join.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-2 max-h-[450px] overflow-y-auto">

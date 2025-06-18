@@ -3,7 +3,7 @@ import PipelineNode from './nodes/PipelineNode';
 import DestinationNode from './nodes/DestinationNode';
 import EndNode from './nodes/EndNode';
 import TableNode from './nodes/TableNode';
-import AddSourceDestNode from './nodes/AddSourceDestNode';
+import AddEndpointNode from './nodes/AddEndpointNode';
 import SourceNode from './nodes/SourceNode';
 import ETLDestinationNode from './nodes/ETLDestinationNode';
 import SplitNode from './nodes/SplitNode';
@@ -17,7 +17,7 @@ export const nodeTypes = {
     destinationNode: DestinationNode,
     endNode: EndNode,
     tableNode: TableNode,
-    addSourceDestNode: AddSourceDestNode,
+    addEndpointNode: AddEndpointNode,
     sourceNode: SourceNode,
     etlDestinationNode: ETLDestinationNode,
     splitNode: SplitNode,
