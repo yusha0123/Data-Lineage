@@ -6,6 +6,10 @@ import joinIcon from "@/assets/icons/join.svg?react";
 import aggregateIcon from "@/assets/icons/aggregate.svg?react";
 import fieldRemoverIcon from "@/assets/icons/field-remover.svg?react";
 import splitIcon from "@/assets/icons/split.svg?react";
+import mongodbIcon from "@/assets/icons/mongodb.png";
+import sheetsIcon from "@/assets/icons/google-sheets.png";
+import mysqlIcon from "@/assets/icons/mysql.png";
+import s3Icon from "@/assets/icons/amazon-s3.png";
 
 const SOURCE: PipelineEndpoint[] = [
     {
@@ -30,6 +34,30 @@ const SOURCE: PipelineEndpoint[] = [
         config: {
             filePath: "/data/input.csv",
             delimiter: ",",
+        },
+    },
+    {
+        id: "source-3",
+        name: "MongoDB Source",
+        type: "source",
+        databaseType: "MongoDB",
+        icon: mongodbIcon,
+        config: {
+            uri: "mongodb://localhost:27017",
+            database: "marketing_data",
+            collection: "leads",
+        },
+    },
+    {
+        id: "source-4",
+        name: "Google Sheets Source",
+        type: "source",
+        databaseType: "GoogleSheets",
+        icon: sheetsIcon,
+        config: {
+            sheetId: "1A2B3C4D5E6F7G8H9I0J",
+            range: "Sheet1!A1:E100",
+            credentialsPath: "/secrets/google-credentials.json",
         },
     },
 ];
@@ -60,6 +88,34 @@ const DESTINATION: PipelineEndpoint[] = [
             headers: {
                 Authorization: "Bearer <token>",
             },
+        },
+    },
+    {
+        id: "dest-3",
+        name: "MySQL Destination",
+        type: "destination",
+        databaseType: "MySQL",
+        icon: mysqlIcon,
+        config: {
+            host: "localhost",
+            port: 3306,
+            database: "reporting",
+            user: "dest_user",
+            password: "password123",
+        },
+    },
+    {
+        id: "dest-4",
+        name: "Amazon S3 Destination",
+        type: "destination",
+        databaseType: "S3",
+        icon: s3Icon,
+        config: {
+            bucket: "data-pipeline-output",
+            region: "us-east-1",
+            accessKeyId: "<access-key>",
+            secretAccessKey: "<secret-key>",
+            path: "outputs/etl/",
         },
     },
 ];

@@ -88,13 +88,12 @@ const EndPointModal = () => {
       }
     }
 
-    setSelectedId(null);
-    setSelectedNodeId(null);
-    onClose();
+    handleCancel();
   };
 
   const handleCancel = () => {
     setSelectedId(null);
+    setSelectedNodeId(null);
     onClose();
   };
 
