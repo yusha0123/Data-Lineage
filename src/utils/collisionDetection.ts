@@ -6,71 +6,7 @@ export const NODE_DIMENSIONS = {
     padding: 20,
 } as const;
 
-class SpatialGrid {
-    private cellSize: number;
-    private grid: Map<string, Node[]> = new Map();
 
-    constructor(cellSize = 400) {
-        this.cellSize = cellSize;
-    }
-
-    private getCellKey(x: number, y: number): string {
-        const cellX = Math.floor(x / this.cellSize);
-        const cellY = Math.floor(y / this.cellSize);
-        return `${cellX},${cellY}`;
-    }
-
-    private getCellsForNode(position: { x: number; y: number }): string[] {
-        const { width, height } = NODE_DIMENSIONS;
-        const keys = new Set<string>();
-
-        const minCellX = Math.floor(position.x / this.cellSize);
-        const maxCellX = Math.floor((position.x + width) / this.cellSize);
-        const minCellY = Math.floor(position.y / this.cellSize);
-        const maxCellY = Math.floor((position.y + height) / this.cellSize);
-
-        for (let x = minCellX; x <= maxCellX; x++) {
-            for (let y = minCellY; y <= maxCellY; y++) {
-                keys.add(`${x},${y}`);
-            }
-        }
-
-        return Array.from(keys);
-    }
-
-    clear(): void {
-        this.grid.clear();
-    }
-
-    addNode(node: Node): void {
-        const cells = this.getCellsForNode(node.position);
-        cells.forEach(cellKey => {
-            if (!this.grid.has(cellKey)) {
-                this.grid.set(cellKey, []);
-            }
-            this.grid.get(cellKey)!.push(node);
-        });
-    }
-
-    getNearbyNodes(position: { x: number; y: number }): Node[] {
-        const cells = this.getCellsForNode(position);
-        const nearbyNodes = new Set<Node>();
-
-        cells.forEach(cellKey => {
-            const cellNodes = this.grid.get(cellKey) || [];
-            cellNodes.forEach(node => nearbyNodes.add(node));
-        });
-
-        return Array.from(nearbyNodes);
-    }
-
-    buildFromNodes(nodes: Node[]): void {
-        this.clear();
-        nodes.forEach(node => this.addNode(node));
-    }
-}
-
-const spatialGrid = new SpatialGrid();
 
 function throttle<T extends (...args: any[]) => any>(
     func: T,
@@ -113,22 +49,6 @@ function isRectangleOverlapping(
 }
 
 export function isNodeColliding(
-    targetNode: Node,
-    allNodes: Node[],
-    newPosition: { x: number; y: number }
-): boolean {
-    if (allNodes.length < 20) {
-        return isNodeCollidingSimple(targetNode, allNodes, newPosition);
-    }
-
-    spatialGrid.buildFromNodes(allNodes);
-
-    const nearbyNodes = spatialGrid.getNearbyNodes(newPosition);
-
-    return isNodeCollidingSimple(targetNode, nearbyNodes, newPosition);
-}
-
-function isNodeCollidingSimple(
     targetNode: Node,
     allNodes: Node[],
     newPosition: { x: number; y: number }
@@ -244,6 +164,8 @@ export const performanceMonitor = {
         const start = performance.now();
         const result = fn();
         const end = performance.now();
+
+        console.log("end - start", end - start);
 
         if (end - start > 1) {
             console.log(`🐌 Performance: ${name} took ${(end - start).toFixed(2)}ms`);
